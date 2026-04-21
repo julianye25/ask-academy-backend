@@ -24,6 +24,20 @@ export const createCategory = async (
       return res.status(400).json({ error: "Category name is required" });
     }
 
+    const existingCategory = await prisma.category.findFirst({
+      where: {
+        userId,
+        name: {
+          equals: normalizedName,
+          mode: "insensitive",
+        },
+      },
+    });
+
+    if (existingCategory) {
+      return res.status(409).json({ error: "Category already exists" });
+    }
+
     const category = await prisma.category.create({
       data: {
         name: normalizedName,
@@ -34,6 +48,10 @@ export const createCategory = async (
 
     return res.status(201).json(category);
   } catch (error) {
+    if ((error as { code?: string })?.code === "P2002") {
+      return res.status(409).json({ error: "Category already exists" });
+    }
+
     console.error("Error creating category:", error);
     return res.status(500).json({ error: "Failed to create category" });
   }
@@ -101,6 +119,8 @@ export const updateCategoryVisibility = async (
     return res.status(200).json(updatedCategory);
   } catch (error) {
     console.error("Error updating category visibility:", error);
-    return res.status(500).json({ error: "Failed to update category visibility" });
+    return res
+      .status(500)
+      .json({ error: "Failed to update category visibility" });
   }
 };
