@@ -1,16 +1,19 @@
 # Ask Academy Backend
 
-Backend API para la plataforma Ask Academy, construido con Node.js, Express, TypeScript, Prisma y PostgreSQL.
+Backend API para Ask Academy construida con Node.js, Express, TypeScript, Prisma y PostgreSQL.
 
-## Objetivo
+## Overview
 
-Este proyecto expone endpoints para:
+La API ya permite:
 
-- Autenticacion de usuarios (registro y login con JWT)
-- Gestion de quizzes
-- Verificacion de salud del servicio y conexion a base de datos
+- Registro y login con JWT.
+- Crear categorias propias por usuario.
+- Crear quizzes asociados a categorias propias.
+- Marcar categorias y quizzes como publicos o privados.
+- Consultar solo tus recursos y los publicos.
+- Verificar la conexion a la base de datos.
 
-## Stack Tecnologico
+## Tech Stack
 
 - Node.js 22
 - TypeScript
@@ -18,28 +21,33 @@ Este proyecto expone endpoints para:
 - Prisma ORM
 - PostgreSQL 15
 - Docker Compose
-- bcryptjs (hash de contrasenas)
-- jsonwebtoken (autenticacion)
+- bcryptjs para hash de contrasenas
+- jsonwebtoken para autenticacion
 
-## Arquitectura Actual
+## Arquitectura
 
-- API REST con Express
-- Prisma como capa de acceso a datos
-- PostgreSQL corriendo en Docker
-- Estructura modular por rutas y controladores
+- API REST modular.
+- Controladores separados por dominio.
+- Rutas protegidas con middleware JWT.
+- Prisma como capa de acceso a datos.
+- PostgreSQL ejecutandose en Docker.
 
 ## Estructura del Proyecto
 
-```
+```text
 .
 |- src
 |  |- config
 |  |  \- db.ts
 |  |- controllers
 |  |  |- auth.controller.ts
+|  |  |- category.controller.ts
 |  |  \- quiz.controller.ts
+|  |- middleware
+|  |  \- auth.middleware.ts
 |  |- routes
 |  |  |- auth.routes.ts
+|  |  |- category.routes.ts
 |  |  \- quiz.routes.ts
 |  \- index.ts
 |- prisma
@@ -47,18 +55,20 @@ Este proyecto expone endpoints para:
 |  \- migrations
 |- generated
 |  \- prisma
+|- postman
+|  \- ask-academy-backend.postman_collection.json
 |- docker-compose.yml
 |- package.json
 \- tsconfig.json
 ```
 
-## Requisitos Previos
+## Requisitos
 
-- Node.js >= 22
+- Node.js 22 o superior
 - npm
 - Docker y Docker Compose
 
-## Configuracion del Entorno
+## Variables de Entorno
 
 Crea un archivo `.env` en la raiz del proyecto con:
 
@@ -68,34 +78,35 @@ DATABASE_URL=postgresql://admin:mypassword@localhost:5432/dev_db
 JWT_SECRET=tu_clave_super_secreta
 ```
 
-## Instalacion y Ejecucion
-
-1. Instalar dependencias:
+## Instalacion
 
 ```bash
 npm install
 ```
 
-2. Levantar PostgreSQL con Docker:
+## Base de Datos
+
+Levanta PostgreSQL con Docker:
 
 ```bash
 docker compose up -d postgres
 ```
 
-3. Ejecutar migraciones y generar cliente Prisma:
+Si ya agregaste cambios al schema, aplica la migracion manualmente o con Prisma segun tu flujo.
+
+Luego regenera el cliente:
 
 ```bash
-npx prisma migrate dev --name init
 npx prisma generate
 ```
 
-4. Iniciar servidor en modo desarrollo:
+## Ejecucion
 
 ```bash
 npm run dev
 ```
 
-## Endpoints Disponibles
+## Endpoints
 
 ### Health
 
@@ -108,9 +119,9 @@ npm run dev
 ### Auth
 
 - `POST /api/auth/register`
-  - Crea un usuario nuevo.
+  - Crea un usuario.
 
-Body esperado:
+Body:
 
 ```json
 {
@@ -120,9 +131,9 @@ Body esperado:
 ```
 
 - `POST /api/auth/login`
-  - Autentica usuario y retorna JWT.
+  - Autentica al usuario y retorna un token JWT.
 
-Body esperado:
+Body:
 
 ```json
 {
@@ -131,7 +142,7 @@ Body esperado:
 }
 ```
 
-Respuesta esperada:
+Respuesta:
 
 ```json
 {
@@ -143,51 +154,121 @@ Respuesta esperada:
 }
 ```
 
+### Categories
+
+Todas las rutas requieren `Authorization: Bearer <token>`.
+
+- `POST /api/categories`
+  - Crea una categoria propia.
+
+Body:
+
+```json
+{
+  "name": "Matematicas",
+  "isPublic": false
+}
+```
+
+- `GET /api/categories`
+  - Lista tus categorias y las publicas.
+
+- `PATCH /api/categories/:id/visibility`
+  - Cambia la visibilidad de una categoria.
+
+Body:
+
+```json
+{
+  "isPublic": true
+}
+```
+
 ### Quizzes
 
-- `POST /api/quizzes`
-  - Crea un quiz.
+Todas las rutas requieren `Authorization: Bearer <token>`.
 
-Body esperado:
+- `POST /api/quizzes`
+  - Crea un quiz asociado a una categoria propia.
+
+Body:
 
 ```json
 {
   "title": "Quiz de Matematicas",
   "description": "Nivel basico",
-  "userId": "uuid-del-usuario",
-  "categoryId": "uuid-de-categoria"
+  "categoryId": "uuid-de-categoria",
+  "isPublic": false
 }
 ```
 
 - `GET /api/quizzes`
-  - Lista quizzes con categoria y autor.
+  - Lista tus quizzes y los publicos.
+
+- `PATCH /api/quizzes/:id/visibility`
+  - Cambia la visibilidad de un quiz.
+
+Body:
+
+```json
+{
+  "isPublic": true
+}
+```
+
+## Coleccion de Postman
+
+Importa la coleccion ubicada en:
+
+- [postman/ask-academy-backend.postman_collection.json](postman/ask-academy-backend.postman_collection.json)
+
+Variables incluidas:
+
+- `baseUrl`
+- `token`
+- `categoryId`
+- `quizId`
+
+## Flujo de Prueba Recomendado
+
+1. Levanta PostgreSQL y el backend.
+2. Haz `register`.
+3. Haz `login` y copia el token.
+4. Crea una categoria.
+5. Crea un quiz usando esa categoria.
+6. Prueba `GET /api/categories` y `GET /api/quizzes`.
+7. Cambia la visibilidad de ambos a publico.
+8. Verifica con otro usuario que solo vea lo publico.
 
 ## Scripts
 
 - `npm run dev`
-  - Ejecuta la API con recarga automatica usando tsx watch.
+  - Ejecuta el servidor con recarga automatica.
 
-## Estado del Proyecto
+## Estado Actual
 
-MVP en progreso con:
+Funcionalidades ya implementadas:
 
-- Registro y login funcionales
-- CRUD parcial de quizzes
-- Modelo relacional base en Prisma
+- Auth con registro y login.
+- Middleware JWT.
+- Categorias por usuario.
+- Quizzes por usuario.
+- Visibilidad publica y privada.
+- Coleccion de Postman para pruebas.
 
-Pendiente sugerido:
+Siguientes pasos sugeridos:
 
-- Middleware de autorizacion por JWT en rutas protegidas
-- Validacion robusta de payloads con Zod o Joi
-- Manejo centralizado de errores
-- Tests unitarios e integracion
-- Documentacion OpenAPI/Swagger
+- CRUD completo de categorias.
+- CRUD completo de quizzes.
+- Validacion de payloads con Zod.
+- Documentacion OpenAPI o Swagger.
+- Tests unitarios e integracion.
 
 ## Seguridad
 
-- Las contrasenas se almacenan con hash mediante bcryptjs.
-- Nunca subir archivo `.env` al repositorio.
-- Usa un JWT_SECRET fuerte y diferente por entorno.
+- Las contrasenas se guardan con bcrypt.
+- No subas `.env` al repositorio.
+- Usa un `JWT_SECRET` fuerte por entorno.
 
 ## Licencia
 

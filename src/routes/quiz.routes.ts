@@ -1,9 +1,15 @@
 import { Router } from "express";
-import { createQuiz, getQuizzes } from "../controllers/quiz.controller.js";
+import {
+	createQuiz,
+	getQuizzes,
+	updateQuizVisibility,
+} from "../controllers/quiz.controller.js";
+import { requireAuth } from "../middleware/auth.middleware.js";
 
 const router = Router();
 
-router.post("/", createQuiz);
-router.get("/", getQuizzes);
+router.post("/", requireAuth, createQuiz);
+router.get("/", requireAuth, getQuizzes);
+router.patch("/:id/visibility", requireAuth, updateQuizVisibility);
 
 export default router;
