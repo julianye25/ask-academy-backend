@@ -5,6 +5,7 @@ Backend API para la plataforma Ask Academy, construido con Node.js, Express, Typ
 ## Objetivo
 
 Este proyecto expone endpoints para:
+
 - Autenticacion de usuarios (registro y login con JWT)
 - Gestion de quizzes
 - Verificacion de salud del servicio y conexion a base de datos
@@ -99,34 +100,34 @@ npm run dev
 ### Health
 
 - `GET /`
-	- Respuesta basica de prueba.
+  - Respuesta basica de prueba.
 
 - `GET /health/db`
-	- Verifica conectividad con PostgreSQL.
+  - Verifica conectividad con PostgreSQL.
 
 ### Auth
 
 - `POST /api/auth/register`
-	- Crea un usuario nuevo.
+  - Crea un usuario nuevo.
 
 Body esperado:
 
 ```json
 {
-	"email": "user@mail.com",
-	"password": "123456"
+  "email": "user@mail.com",
+  "password": "123456"
 }
 ```
 
 - `POST /api/auth/login`
-	- Autentica usuario y retorna JWT.
+  - Autentica usuario y retorna JWT.
 
 Body esperado:
 
 ```json
 {
-	"email": "user@mail.com",
-	"password": "123456"
+  "email": "user@mail.com",
+  "password": "123456"
 }
 ```
 
@@ -134,46 +135,48 @@ Respuesta esperada:
 
 ```json
 {
-	"token": "jwt_token",
-	"user": {
-		"id": "uuid",
-		"email": "user@mail.com"
-	}
+  "token": "jwt_token",
+  "user": {
+    "id": "uuid",
+    "email": "user@mail.com"
+  }
 }
 ```
 
 ### Quizzes
 
 - `POST /api/quizzes`
-	- Crea un quiz.
+  - Crea un quiz.
 
 Body esperado:
 
 ```json
 {
-	"title": "Quiz de Matematicas",
-	"description": "Nivel basico",
-	"userId": "uuid-del-usuario",
-	"categoryId": "uuid-de-categoria"
+  "title": "Quiz de Matematicas",
+  "description": "Nivel basico",
+  "userId": "uuid-del-usuario",
+  "categoryId": "uuid-de-categoria"
 }
 ```
 
 - `GET /api/quizzes`
-	- Lista quizzes con categoria y autor.
+  - Lista quizzes con categoria y autor.
 
 ## Scripts
 
 - `npm run dev`
-	- Ejecuta la API con recarga automatica usando tsx watch.
+  - Ejecuta la API con recarga automatica usando tsx watch.
 
 ## Estado del Proyecto
 
 MVP en progreso con:
+
 - Registro y login funcionales
 - CRUD parcial de quizzes
 - Modelo relacional base en Prisma
 
 Pendiente sugerido:
+
 - Middleware de autorizacion por JWT en rutas protegidas
 - Validacion robusta de payloads con Zod o Joi
 - Manejo centralizado de errores
