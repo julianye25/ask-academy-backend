@@ -16,13 +16,8 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/health/db",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "health",
-                "db"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["health", "db"]
             }
           }
         }
@@ -47,14 +42,8 @@
             },
             "url": {
               "raw": "{{baseUrl}}/api/auth/register",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "api",
-                "auth",
-                "register"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "register"]
             }
           }
         },
@@ -74,14 +63,8 @@
             },
             "url": {
               "raw": "{{baseUrl}}/api/auth/login",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "api",
-                "auth",
-                "login"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "login"]
             }
           }
         }
@@ -110,13 +93,8 @@
             },
             "url": {
               "raw": "{{baseUrl}}/api/categories",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "api",
-                "categories"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "categories"]
             }
           }
         },
@@ -132,13 +110,8 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/api/categories",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "api",
-                "categories"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "categories"]
             }
           }
         },
@@ -162,15 +135,8 @@
             },
             "url": {
               "raw": "{{baseUrl}}/api/categories/{{categoryId}}/visibility",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "api",
-                "categories",
-                "{{categoryId}}",
-                "visibility"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "categories", "{{categoryId}}", "visibility"]
             }
           }
         }
@@ -199,13 +165,8 @@
             },
             "url": {
               "raw": "{{baseUrl}}/api/quizzes",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "api",
-                "quizzes"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "quizzes"]
             }
           }
         },
@@ -221,13 +182,8 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/api/quizzes",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "api",
-                "quizzes"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "quizzes"]
             }
           }
         },
@@ -251,15 +207,8 @@
             },
             "url": {
               "raw": "{{baseUrl}}/api/quizzes/{{quizId}}/visibility",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "api",
-                "quizzes",
-                "{{quizId}}",
-                "visibility"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "quizzes", "{{quizId}}", "visibility"]
             }
           }
         }
